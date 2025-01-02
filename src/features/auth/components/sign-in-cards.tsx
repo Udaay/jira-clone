@@ -17,23 +17,21 @@ import {
   FormItem,
 } from "@/components/ui/form";
 import Link from "next/link";
-
-const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8).max(32),
-});
+import { loginFormSchema } from "../schemas";
+import { useLogin } from "../api/use-login";
 
 export const SignInCard = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { mutateAsync: mutateLoginAsync } = useLogin();
+  const form = useForm<z.infer<typeof loginFormSchema>>({
     defaultValues: {
       email: "",
       password: "",
     },
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(loginFormSchema),
   });
 
-  const onSubmit = (data: z.infer<typeof formSchema>) => {
-    console.log(data);
+  const onSubmit = (data: z.infer<typeof loginFormSchema>) => {
+    mutateLoginAsync({ json: data });
   };
 
   return (
