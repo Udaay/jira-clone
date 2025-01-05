@@ -5,6 +5,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+import { useRouter } from "next/navigation";
+
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,6 +23,7 @@ import { loginFormSchema } from "../schemas";
 import { useLogin } from "../api/use-login";
 
 export const SignInCard = () => {
+  const router = useRouter();
   const { mutateAsync: mutateLoginAsync } = useLogin();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     defaultValues: {
@@ -31,7 +34,14 @@ export const SignInCard = () => {
   });
 
   const onSubmit = (data: z.infer<typeof loginFormSchema>) => {
-    mutateLoginAsync({ json: data });
+    mutateLoginAsync(
+      { json: data },
+      {
+        onSuccess: () => {
+          router.push("/");
+        },
+      }
+    );
   };
 
   return (
