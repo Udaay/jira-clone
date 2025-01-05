@@ -9,11 +9,7 @@ import { sessionMiddleware } from "@/lib/session-middleware";
 
 const app = new Hono()
   .get("/currentUser", sessionMiddleware ,async (c) => {
-    return c.json({
-      success: true,
-      message: "User fetched successfully",
-      data: c.get("user"),
-    });
+    return c.json(c.get("user"));
   })
   .post("/login", zValidator("json", loginFormSchema), async (c) => {
     const { email, password } = c.req.valid("json");

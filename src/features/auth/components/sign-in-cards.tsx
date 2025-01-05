@@ -1,11 +1,10 @@
+"use client";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-
-import { useRouter } from "next/navigation";
 
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,6 @@ import { loginFormSchema } from "../schemas";
 import { useLogin } from "../api/use-login";
 
 export const SignInCard = () => {
-  const router = useRouter();
   const { mutateAsync: mutateLoginAsync } = useLogin();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     defaultValues: {
@@ -34,14 +32,7 @@ export const SignInCard = () => {
   });
 
   const onSubmit = (data: z.infer<typeof loginFormSchema>) => {
-    mutateLoginAsync(
-      { json: data },
-      {
-        onSuccess: () => {
-          router.push("/");
-        },
-      }
-    );
+    mutateLoginAsync({ json: data });
   };
 
   return (
