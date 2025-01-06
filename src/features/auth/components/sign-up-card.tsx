@@ -30,7 +30,7 @@ import { signUpFormSchema } from "../schemas";
 import useSignUp from "../api/use-signup";
 
 export const SignUpCard = () => {
-  const { mutateAsync: mutateSignUpAsync } = useSignUp();
+  const { mutateAsync: mutateSignUpAsync, isPending, isSuccess } = useSignUp();
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     defaultValues: {
       email: "",
@@ -43,6 +43,8 @@ export const SignUpCard = () => {
   const onSubmit = (data: z.infer<typeof signUpFormSchema>) => {
     mutateSignUpAsync({ json: data });
   };
+
+  const isDisabled = isPending || isSuccess;
 
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
@@ -113,7 +115,7 @@ export const SignUpCard = () => {
                 </FormItem>
               )}
             />
-            <Button size={"lg"} className="w-full">
+            <Button size={"lg"} className="w-full" disabled={isDisabled}>
               Sign Up
             </Button>
           </form>
@@ -123,7 +125,7 @@ export const SignUpCard = () => {
         </div>
         <div className="flex flex-col gap-y-4">
           <Button
-            disabled={false}
+            disabled={isDisabled}
             size={"lg"}
             className="w-full"
             variant={"secondary"}
@@ -133,7 +135,7 @@ export const SignUpCard = () => {
             Signup with Google
           </Button>
           <Button
-            disabled={false}
+            disabled={isDisabled}
             size={"lg"}
             className="w-full"
             variant={"secondary"}

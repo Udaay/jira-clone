@@ -22,7 +22,7 @@ import { loginFormSchema } from "../schemas";
 import { useLogin } from "../api/use-login";
 
 export const SignInCard = () => {
-  const { mutateAsync: mutateLoginAsync } = useLogin();
+  const { mutateAsync: mutateLoginAsync, isPending, isSuccess } = useLogin();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     defaultValues: {
       email: "",
@@ -34,6 +34,8 @@ export const SignInCard = () => {
   const onSubmit = (data: z.infer<typeof loginFormSchema>) => {
     mutateLoginAsync({ json: data });
   };
+
+  const isDisabled = isPending || isSuccess;
 
   return (
     <Card className="w-full h-full md:w-[487px] border-none shadow-none">
@@ -78,7 +80,7 @@ export const SignInCard = () => {
                 </FormItem>
               )}
             />
-            <Button size={"lg"} className="w-full">
+            <Button disabled={isDisabled} size={"lg"} className="w-full">
               Sign In
             </Button>
           </form>
@@ -88,7 +90,7 @@ export const SignInCard = () => {
         </div>
         <div className="flex flex-col gap-y-4">
           <Button
-            disabled={false}
+            disabled={isDisabled}
             size={"lg"}
             className="w-full"
             variant={"secondary"}
@@ -98,7 +100,7 @@ export const SignInCard = () => {
             Login with Google
           </Button>
           <Button
-            disabled={false}
+            disabled={isDisabled}
             size={"lg"}
             className="w-full"
             variant={"secondary"}
